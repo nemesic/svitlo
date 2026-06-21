@@ -72,8 +72,11 @@ export default function StoreProvider({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
 
-  // Hydrate persisted state on the client only (avoids SSR mismatch).
+  // Hydrate persisted state on the client only. Reading localStorage during
+  // render would cause an SSR/client hydration mismatch, so this one-time
+  // mount effect is the correct place to apply the saved values.
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect -- intentional one-time client hydration from localStorage */
     try {
       const raw = localStorage.getItem(LS_KEY);
       if (raw) {
@@ -86,6 +89,7 @@ export default function StoreProvider({
       // ignore corrupt storage
     }
     setHydrated(true);
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   // Persist after hydration.
