@@ -1,26 +1,53 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-bg: #f1efea;
+  --color-ink: #17150f;
+  --color-muted: #8a857a;
+  --color-muted-2: #6a665d;
+  --color-line: rgba(23, 21, 15, 0.12);
+  --color-placeholder: #e4e0d8;
+  --color-ink-soft: #4a463c;
+
+  --font-sans: var(--font-manrope), Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-jetbrains), monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: #17150f;
+  color: #f1efea;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@keyframes svMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
