@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
 import { Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import StoreProvider from "./store-provider";
+import Preloader from "@/components/Preloader";
+import FullscreenNav from "@/components/FullscreenNav";
+import AnnouncementMarquee from "@/components/AnnouncementMarquee";
+import Header from "@/components/Header";
+import ServiceStrip from "@/components/ServiceStrip";
+import Footer from "@/components/Footer";
+import CartDrawer from "@/components/CartDrawer";
+import PreferencesModal from "@/components/PreferencesModal";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -28,7 +37,19 @@ export default function RootLayout({
       lang="en"
       className={`${manrope.variable} ${jetbrainsMono.variable} antialiased`}
     >
-      <body>{children}</body>
+      <body>
+        <StoreProvider>
+          <Preloader />
+          <FullscreenNav />
+          <AnnouncementMarquee />
+          <Header />
+          {children}
+          <ServiceStrip />
+          <Footer />
+          <CartDrawer />
+          <PreferencesModal />
+        </StoreProvider>
+      </body>
     </html>
   );
 }
