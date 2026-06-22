@@ -10,6 +10,8 @@ import ServiceStrip from "@/components/ServiceStrip";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import PreferencesModal from "@/components/PreferencesModal";
+import DaylightSync from "@/components/DaylightSync";
+import { DAYLIGHT_INLINE_SCRIPT } from "@/lib/daylight";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -35,10 +37,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-light="day"
+      suppressHydrationWarning
       className={`${manrope.variable} ${jetbrainsMono.variable} antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: DAYLIGHT_INLINE_SCRIPT }} />
+      </head>
       <body>
         <StoreProvider>
+          <DaylightSync />
           <Preloader />
           <FullscreenNav />
           <AnnouncementMarquee />
