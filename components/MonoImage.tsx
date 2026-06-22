@@ -20,7 +20,7 @@ export default function MonoImage({
       fill
       sizes={sizes}
       priority={priority}
-      className={`object-cover grayscale contrast-[1.03] transition-[filter,transform] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:grayscale-0 ${className}`}
+      className={`object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.015] ${className}`}
     />
   );
 }
