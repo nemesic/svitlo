@@ -31,6 +31,32 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition:
+    background-color 600ms cubic-bezier(0.16, 1, 0.3, 1),
+    color 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Daylight — chrome palette shifts by visitor local time of day.
+   day = base @theme values (no selector). ink is intentionally never changed. */
+html[data-light="dawn"] {
+  --color-bg: #f3ece6;
+  --color-placeholder: #e8ddd5;
+  --color-line: rgba(40, 22, 15, 0.12);
+  --color-ink-soft: #4a4339;
+}
+
+html[data-light="dusk"] {
+  --color-bg: #f1e7d8;
+  --color-placeholder: #e6d9c4;
+  --color-line: rgba(60, 38, 12, 0.14);
+  --color-ink-soft: #4a4030;
+}
+
+html[data-light="night"] {
+  --color-bg: #e8e1d5;
+  --color-placeholder: #d9d1c2;
+  --color-line: rgba(30, 24, 15, 0.16);
+  --color-ink-soft: #423b30;
 }
 
 ::selection {
