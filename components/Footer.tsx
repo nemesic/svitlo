@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useStore } from "@/app/store-provider";
+import Cta from "@/components/Cta";
 
 export default function Footer() {
   const { t } = useStore();
@@ -29,50 +30,47 @@ export default function Footer() {
               type="email"
               required
               placeholder="your@email.com"
-              className="min-w-[200px] flex-1 border-0 border-b border-[rgba(23,21,15,0.3)] bg-transparent px-0.5 py-3 text-base outline-none focus:border-ink"
+              className="min-w-[200px] flex-1 border-0 border-b border-[rgba(10,10,10,0.3)] bg-transparent px-0.5 py-3 text-base outline-none focus:border-ink"
             />
-            <button
+            <Cta
               type="submit"
-              className="bg-ink px-7 py-[13px] font-mono text-[11px] uppercase tracking-[0.14em] text-bg transition-colors hover:bg-[#2e2a20]"
+              variant="primary"
+              className="px-7 py-[13px] font-mono text-[11px] uppercase tracking-[0.14em]"
             >
               {subscribed ? "✓" : t("footer.subscribe")}
-            </button>
+            </Cta>
           </form>
         </div>
         <FooterCol
-          title="Shop"
+          title={t("footer.shop")}
           links={[
-            { label: "New arrivals", href: "/shop" },
-            { label: "Outerwear", href: "/shop" },
-            { label: "Knitwear", href: "/shop" },
-            { label: "Trousers", href: "/shop" },
+            { label: t("arrivals.title"), href: "/shop" },
+            { label: t("cat.outerwear"), href: "/shop" },
+            { label: t("cat.tshirts"), href: "/shop" },
+            { label: t("cat.trousers"), href: "/shop" },
           ]}
         />
         <FooterCol
-          title="Company"
+          title={t("footer.company")}
           links={[
-            { label: "About", href: "/lookbook" },
-            { label: "Sustainability", href: "/lookbook" },
-            { label: "Stockists", href: "/lookbook" },
-            { label: "Contact", href: "/lookbook" },
+            { label: t("about.eyebrow"), href: "/about" },
+            { label: t("contact.eyebrow"), href: "/contact" },
           ]}
         />
         <FooterCol
-          title="Connect"
+          title={t("footer.connect")}
           links={[
             { label: "Instagram", href: "#" },
             { label: "TikTok", href: "#" },
-            { label: "Newsletter", href: "#" },
           ]}
         />
       </div>
-      <div className="whitespace-nowrap py-6 text-[clamp(64px,22vw,340px)] font-light leading-[0.82] tracking-[-0.04em]">
+      <div className="block whitespace-nowrap py-6 text-[clamp(64px,22vw,340px)] font-light leading-[0.82] tracking-[-0.04em]">
         SVITŁO
       </div>
       <div className="flex flex-wrap justify-between gap-5 font-mono text-[11px] uppercase tracking-[0.08em] text-muted">
-        <span>© 2026 SVITŁO — All rights reserved</span>
-        <span>Concept &amp; design — portfolio project</span>
-        <span>Kyiv, Ukraine</span>
+        <span>{t("footer.rights")}</span>
+        <span>{t("contact.location")}</span>
       </div>
     </footer>
   );
@@ -92,7 +90,7 @@ function FooterCol({
       </span>
       <div className="mt-[18px] flex flex-col gap-[11px] text-sm">
         {links.map((l, i) => (
-          <Link key={`${l.label}-${i}`} href={l.href} className="hover:opacity-55">
+          <Link key={`${l.label}-${i}`} href={l.href} className="text-ink hover:opacity-55">
             {l.label}
           </Link>
         ))}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope, JetBrains_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./store-provider";
 import Preloader from "@/components/Preloader";
@@ -9,26 +9,27 @@ import Header from "@/components/Header";
 import ServiceStrip from "@/components/ServiceStrip";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
+import WishlistDrawer from "@/components/WishlistDrawer";
 import PreferencesModal from "@/components/PreferencesModal";
-import DaylightSync from "@/components/DaylightSync";
-import { DAYLIGHT_INLINE_SCRIPT } from "@/lib/daylight";
+import SmoothScroll from "@/components/SmoothScroll";
+import ScrollProgress from "@/components/ScrollProgress";
+import CreditBar from "@/components/CreditBar";
 
-const manrope = Manrope({
-  variable: "--font-manrope",
+const geistSans = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains",
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
-  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
-  title: "SVITŁO — SS26",
+  title: "SVITŁO",
   description:
     "SVITŁO — a considered wardrobe of garment-dyed essentials, made in small runs by hand in Kyiv.",
+  formatDetection: { telephone: false, date: false, address: false, email: false },
 };
 
 export default function RootLayout({
@@ -37,16 +38,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-light="day"
       suppressHydrationWarning
-      className={`${manrope.variable} ${jetbrainsMono.variable} antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: DAYLIGHT_INLINE_SCRIPT }} />
-      </head>
       <body>
         <StoreProvider>
-          <DaylightSync />
+          <SmoothScroll />
+          <ScrollProgress />
           <Preloader />
           <FullscreenNav />
           <AnnouncementMarquee />
@@ -54,7 +52,9 @@ export default function RootLayout({
           {children}
           <ServiceStrip />
           <Footer />
+          <CreditBar />
           <CartDrawer />
+          <WishlistDrawer />
           <PreferencesModal />
         </StoreProvider>
       </body>

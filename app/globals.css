@@ -1,20 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #f1efea;
-  --color-ink: #17150f;
-  --color-muted: #8a857a;
-  --color-muted-2: #6a665d;
-  --color-line: rgba(23, 21, 15, 0.12);
-  --color-placeholder: #e4e0d8;
-  --color-ink-soft: #4a463c;
-
-  --font-sans: var(--font-manrope), Helvetica, Arial, sans-serif;
-  --font-mono: var(--font-jetbrains), monospace;
+  --color-bg: #fafafa;
+  --color-ink: #0a0a0a;
+  --color-muted: #8e8e93;
+  --color-muted-2: #6e6e73;
+  --color-line: rgba(10, 10, 10, 0.1);
+  --color-placeholder: #ededed;
+  --color-ink-soft: #3a3a3c;
+  --color-accent: #0a0a0a;
+  --color-accent-deep: #262626;
+  --font-sans: var(--font-geist-sans), Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
 * {
   box-sizing: border-box;
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 html,
@@ -22,51 +31,50 @@ body {
   margin: 0;
   padding: 0;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
   background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-sans);
+  letter-spacing: -0.011em;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  transition:
-    background-color 600ms cubic-bezier(0.16, 1, 0.3, 1),
-    color 600ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Daylight — chrome palette shifts by visitor local time of day.
-   day = base @theme values (no selector). ink is intentionally never changed. */
-html[data-light="dawn"] {
-  --color-bg: #f3ece6;
-  --color-placeholder: #e8ddd5;
-  --color-line: rgba(40, 22, 15, 0.12);
-  --color-ink-soft: #4a4339;
+@layer base {
+  a,
+  button {
+    transition:
+      color 220ms cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 220ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 220ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
 }
 
-html[data-light="dusk"] {
-  --color-bg: #f1e7d8;
-  --color-placeholder: #e6d9c4;
-  --color-line: rgba(60, 38, 12, 0.14);
-  --color-ink-soft: #4a4030;
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
 }
-
-html[data-light="night"] {
-  --color-bg: #e8e1d5;
-  --color-placeholder: #d9d1c2;
-  --color-line: rgba(30, 24, 15, 0.16);
-  --color-ink-soft: #423b30;
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
 }
 
 ::selection {
-  background: #17150f;
-  color: #f1efea;
+  background: #0a0a0a;
+  color: #fafafa;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
 @keyframes svMarquee {
@@ -75,5 +83,35 @@ a {
   }
   to {
     transform: translateX(-50%);
+  }
+}
+
+@keyframes svShine {
+  from {
+    background-position: 200% center;
+  }
+  to {
+    background-position: -200% center;
+  }
+}
+.sv-shine {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-muted) 35%,
+    var(--color-ink) 50%,
+    var(--color-muted) 65%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: svShine 6s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sv-shine {
+    animation: none;
+    background: none;
+    color: var(--color-muted);
+    -webkit-text-fill-color: var(--color-muted);
   }
 }

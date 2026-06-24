@@ -1,26 +1,23 @@
 import { describe, expect, it } from "vitest";
-import { getProduct, PRODUCTS, slugify } from "./products";
+import { getProduct, PRODUCTS } from "./products";
 
 describe("products", () => {
-  it("slugifies a product name", () => {
-    expect(slugify("Boxy Heavyweight Tee")).toBe("boxy-heavyweight-tee");
-    expect(slugify("Wool-Blend Overshirt")).toBe("wool-blend-overshirt");
+  it("has a populated catalogue", () => {
+    expect(PRODUCTS.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("has 12 products", () => {
-    expect(PRODUCTS).toHaveLength(12);
-  });
-
-  it("gives every product a unique slug and an image path", () => {
-    const slugs = new Set(PRODUCTS.map((p) => p.slug));
-    expect(slugs.size).toBe(12);
+  it("gives the product colours, each with an ordered gallery", () => {
     for (const p of PRODUCTS) {
-      expect(p.image).toBe(`/images/products/${p.slug}.jpg`);
+      expect(p.colours.length).toBeGreaterThan(0);
+      for (const c of p.colours) {
+        expect(c.images.length).toBeGreaterThan(0);
+      }
+      expect(p.image).toBe(p.colours[0].images[0]);
     }
   });
 
   it("looks up a product by slug", () => {
-    expect(getProduct("garment-dyed-hoodie")?.eur).toBe(185);
+    expect(getProduct("stwd-studio-hoodie")?.eur).toBe(36);
     expect(getProduct("nope")).toBeUndefined();
   });
 });

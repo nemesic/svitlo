@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
+import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
+import Cta from "@/components/Cta";
 import { useStore } from "@/app/store-provider";
-import { formatPrice } from "@/lib/currency";
 
 export default function CartDrawer() {
   const {
@@ -12,11 +12,11 @@ export default function CartDrawer() {
     cartLines,
     count,
     subtotal,
-    currency,
     shipFree,
     shipProgressPct,
     shipRemainingEur,
     removeItem,
+    setQty,
     price,
     t,
   } = useStore();
@@ -26,7 +26,7 @@ export default function CartDrawer() {
       {drawerOpen && (
         <>
           <motion.div
-            className="fixed inset-0 z-[90] bg-[rgba(23,21,15,0.4)]"
+            className="fixed inset-0 z-[90] bg-[rgba(10,10,10,0.4)]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -53,48 +53,83 @@ export default function CartDrawer() {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-7 py-2">
+            <div data-lenis-prevent className="flex-1 overflow-y-auto px-7 py-2">
               {cartLines.length === 0 ? (
                 <div className="flex flex-col items-start gap-3.5 py-12">
                   <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
                     {t("cart.empty")}
                   </span>
-                  <button
-                    type="button"
+                  <Cta
                     onClick={closeDrawer}
-                    className="bg-ink px-6 py-3.5 font-mono text-[11px] uppercase tracking-[0.14em] text-bg hover:bg-[#2e2a20]"
+                    variant="primary"
+                    arrow
+                    className="px-6 py-3.5 font-mono text-[11px] uppercase tracking-[0.14em]"
                   >
                     {t("cart.continue")}
-                  </button>
+                  </Cta>
                 </div>
               ) : (
                 cartLines.map((line) => (
                   <div
                     key={line.idx}
-                    className="flex items-center gap-4 border-b border-line py-[18px]"
+                    className="flex items-start gap-4 border-b border-line py-[18px]"
                   >
-                    <div
-                      className="h-[72px] w-[58px] shrink-0 bg-placeholder"
-                      style={{
-                        backgroundImage:
-                          "repeating-linear-gradient(135deg,#ddd8cf 0,#ddd8cf 1px,#e7e2d9 1px,#e7e2d9 8px)",
-                      }}
-                    />
-                    <div className="min-w-0 flex-1">
-                      <span className="block text-sm font-medium">
-                        {line.label}
-                      </span>
-                      <span className="mt-1 block font-mono text-xs text-muted">
-                        {line.price}
-                      </span>
+                    <div className="relative h-[72px] w-[58px] shrink-0 overflow-hidden bg-placeholder">
+                      {line.image && (
+                        <Image
+                          src={line.image}
+                          alt={line.name}
+                          fill
+                          sizes="58px"
+                          className="object-cover"
+                        />
+                      )}
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => removeItem(line.idx)}
-                      className="font-mono text-[10px] uppercase tracking-[0.1em] text-muted hover:text-ink"
-                    >
-                      {t("cart.remove")}
-                    </button>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="block text-sm font-medium">
+                          {line.name}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => removeItem(line.idx)}
+                          className="shrink-0 font-mono text-[10px] uppercase tracking-[0.1em] text-muted hover:text-ink"
+                        >
+                          {t("cart.remove")}
+                        </button>
+                      </div>
+                      {(line.colour || line.size) && (
+                        <span className="mt-1 block font-mono text-[11px] uppercase tracking-[0.08em] text-muted">
+                          {[line.colour, line.size].filter(Boolean).join(" · ")}
+                        </span>
+                      )}
+                      <div className="mt-2.5 flex items-center justify-between">
+                        <div className="flex items-center border border-[rgba(10,10,10,0.2)]">
+                          <button
+                            type="button"
+                            onClick={() => setQty(line.idx, line.qty - 1)}
+                            aria-label={t("cart.decrease")}
+                            className="flex h-7 w-7 items-center justify-center text-sm leading-none text-[#111] hover:bg-[rgba(10,10,10,0.06)]"
+                          >
+                            −
+                          </button>
+                          <span className="w-7 text-center font-mono text-xs tabular-nums">
+                            {line.qty}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setQty(line.idx, line.qty + 1)}
+                            aria-label={t("cart.increase")}
+                            className="flex h-7 w-7 items-center justify-center text-sm leading-none text-[#111] hover:bg-[rgba(10,10,10,0.06)]"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <span className="font-mono text-xs text-muted">
+                          {line.price}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 ))
               )}
@@ -103,16 +138,15 @@ export default function CartDrawer() {
             <div className="border-t border-line px-7 pb-7 pt-5">
               {count > 0 && !shipFree && (
                 <div className="mb-[18px]">
-                  <p className="mb-2.5 font-mono text-[11px] text-ink">
-                    Add{" "}
-                    <span className="font-medium">
-                      {formatPrice(shipRemainingEur, currency)}
-                    </span>{" "}
-                    for free shipping
+                  <p className="mb-2.5 font-mono text-[11px] text-[#111]">
+                    {price(subtotal)} / {price(subtotal + shipRemainingEur)} —{" "}
+                    {t("cart.add")}{" "}
+                    <span className="font-medium">{price(shipRemainingEur)}</span>{" "}
+                    {t("cart.forFree")}
                   </p>
-                  <div className="h-[3px] overflow-hidden bg-[rgba(23,21,15,0.1)]">
+                  <div className="h-1 overflow-hidden bg-[rgba(10,10,10,0.1)]">
                     <div
-                      className="h-full bg-ink transition-[width] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                      className="h-full bg-[#111] transition-[width] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
                       style={{ width: `${shipProgressPct}%` }}
                     />
                   </div>
@@ -133,13 +167,15 @@ export default function CartDrawer() {
                   {price(subtotal)}
                 </span>
               </div>
-              <Link
+              <Cta
                 href="/checkout"
                 onClick={closeDrawer}
-                className="block w-full bg-ink p-4 text-center font-mono text-xs uppercase tracking-[0.14em] text-bg hover:bg-[#2e2a20]"
+                variant="primary"
+                shine={false}
+                className="w-full !bg-black p-4 font-mono text-xs uppercase tracking-[0.14em] !text-white hover:!bg-black"
               >
                 {t("cart.checkout")} — {price(subtotal)}
-              </Link>
+              </Cta>
             </div>
           </motion.aside>
         </>

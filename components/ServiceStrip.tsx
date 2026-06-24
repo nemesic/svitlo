@@ -7,8 +7,8 @@ import Eyebrow from "./Eyebrow";
 const CELLS: { t: MessageKey; b: MessageKey }[] = [
   { t: "service.shipping.t", b: "service.shipping.b" },
   { t: "service.returns.t", b: "service.returns.b" },
-  { t: "service.atelier.t", b: "service.atelier.b" },
-  { t: "service.care.t", b: "service.care.b" },
+  { t: "service.brands.t", b: "service.brands.b" },
+  { t: "service.support.t", b: "service.support.b" },
 ];
 
 export default function ServiceStrip() {

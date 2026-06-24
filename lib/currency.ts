@@ -11,5 +11,10 @@ export const SYMBOLS: Record<Currency, string> = {
 export function formatPrice(eur: number, currency: Currency): string {
   const rate = RATES[currency] ?? 1;
   const symbol = SYMBOLS[currency] ?? "€";
-  return symbol + Math.round((eur || 0) * rate).toLocaleString("en-US");
+  const value = (eur || 0) * rate;
+  const text =
+    currency === "EUR" && !Number.isInteger(value)
+      ? value.toFixed(2)
+      : Math.round(value).toLocaleString("en-US");
+  return symbol + text;
 }

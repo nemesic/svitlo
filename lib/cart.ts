@@ -1,7 +1,9 @@
 export interface CartItem {
-  name: string;
+  slug: string;
   eur: number;
   qty: number;
+  colour: string;
+  size: string;
 }
 
 export const FREE_SHIP_THRESHOLD = 200;
@@ -9,21 +11,34 @@ export const FLAT_SHIP = 15;
 
 export function addToItems(
   items: CartItem[],
-  name: string,
+  slug: string,
   eur: number,
+  colour: string,
+  size: string,
 ): CartItem[] {
   const next = items.map((it) => ({ ...it }));
-  const existing = next.find((it) => it.name === name);
+  const existing = next.find(
+    (it) => it.slug === slug && it.colour === colour && it.size === size,
+  );
   if (existing) {
     existing.qty += 1;
   } else {
-    next.push({ name, eur, qty: 1 });
+    next.push({ slug, eur, qty: 1, colour, size });
   }
   return next;
 }
 
 export function removeAt(items: CartItem[], index: number): CartItem[] {
   return items.filter((_, i) => i !== index);
+}
+
+export function setQtyAt(
+  items: CartItem[],
+  index: number,
+  qty: number,
+): CartItem[] {
+  if (qty < 1) return removeAt(items, index);
+  return items.map((it, i) => (i === index ? { ...it, qty } : it));
 }
 
 export function cartCount(items: CartItem[]): number {

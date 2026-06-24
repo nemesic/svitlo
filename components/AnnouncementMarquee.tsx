@@ -12,7 +12,7 @@ export default function AnnouncementMarquee() {
       {KEYS.map((k) => (
         <span key={k} className="inline-flex items-center">
           <span className="px-[26px]">{t(k)}</span>
-          <span className="opacity-35">—</span>
+          <span className="opacity-35">·</span>
         </span>
       ))}
     </span>
@@ -20,7 +20,7 @@ export default function AnnouncementMarquee() {
 
   return (
     <div className="overflow-hidden whitespace-nowrap border-b border-line bg-bg">
-      <div className="inline-flex animate-[svMarquee_42s_linear_infinite] will-change-transform">
+      <div className="inline-flex animate-[svMarquee_42s_linear_infinite] will-change-transform hover:[animation-play-state:paused]">
         {track}
         <span aria-hidden="true">{track}</span>
       </div>

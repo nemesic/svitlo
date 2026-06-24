@@ -2,7 +2,9 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
+import type { ReactNode } from "react";
 import { useStore } from "@/app/store-provider";
+import Cta from "@/components/Cta";
 import { type Currency, SYMBOLS } from "@/lib/currency";
 import type { Lang } from "@/lib/i18n";
 
@@ -13,14 +15,13 @@ export default function PreferencesModal() {
     <AnimatePresence>
       {prefsOpen && (
         <motion.div
-          className="fixed inset-0 z-[110] flex items-center justify-center bg-[rgba(23,21,15,0.45)] p-6"
+          className="fixed inset-0 z-[110] flex items-center justify-center bg-[rgba(10,10,10,0.45)] p-6 backdrop-blur-[2px]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
           onClick={closePrefs}
         >
-          {/* Mounted only while open, so drafts initialize fresh from current prefs. */}
           <PrefsPanel
             lang={lang}
             currency={currency}
@@ -31,6 +32,44 @@ export default function PreferencesModal() {
         </motion.div>
       )}
     </AnimatePresence>
+  );
+}
+
+const PILL = { type: "spring", stiffness: 380, damping: 32, mass: 0.8 } as const;
+
+function Option({
+  on,
+  layoutId,
+  onClick,
+  children,
+}: {
+  on: boolean;
+  layoutId: string;
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={on}
+      className="relative border border-[rgba(10,10,10,0.2)] px-2 py-3.5 text-[13px] font-medium"
+    >
+      {on && (
+        <motion.span
+          layoutId={layoutId}
+          transition={PILL}
+          className="absolute inset-0 bg-ink"
+        />
+      )}
+      <span
+        className={`relative transition-colors duration-200 ${
+          on ? "text-bg" : "text-ink"
+        }`}
+      >
+        {children}
+      </span>
+    </button>
   );
 }
 
@@ -50,18 +89,13 @@ function PrefsPanel({
   const [draftLang, setDraftLang] = useState<Lang>(lang);
   const [draftCur, setDraftCur] = useState<Currency>(currency);
 
-  const cell = (on: boolean) =>
-    `cursor-pointer border px-2 py-3.5 text-[13px] font-medium ${
-      on ? "border-ink bg-ink text-bg" : "border-[rgba(23,21,15,0.2)] text-ink"
-    }`;
-
   return (
     <motion.div
-      className="w-[min(440px,100%)] border border-line bg-bg p-9"
-      initial={{ scale: 0.94 }}
-      animate={{ scale: 1 }}
-      exit={{ scale: 0.94 }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      className="w-[min(440px,100%)] border border-line bg-bg p-9 shadow-[0_30px_90px_-24px_rgba(10,10,10,0.4)]"
+      initial={{ opacity: 0, y: 14, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 10, scale: 0.97 }}
+      transition={{ type: "spring", stiffness: 320, damping: 30, mass: 0.9 }}
       onClick={(e) => e.stopPropagation()}
     >
       <div className="mb-[30px] flex items-center justify-between">
@@ -82,14 +116,14 @@ function PrefsPanel({
       </span>
       <div className="mb-7 mt-3.5 grid grid-cols-2 gap-2.5">
         {(["UA", "EN"] as Lang[]).map((l) => (
-          <button
+          <Option
             key={l}
-            type="button"
-            className={cell(draftLang === l)}
+            on={draftLang === l}
+            layoutId="prefs-lang"
             onClick={() => setDraftLang(l)}
           >
             {l === "UA" ? "Українська (UA)" : "English (EN)"}
-          </button>
+          </Option>
         ))}
       </div>
 
@@ -98,24 +132,24 @@ function PrefsPanel({
       </span>
       <div className="mb-[30px] mt-3.5 grid grid-cols-3 gap-2.5">
         {(["UAH", "EUR", "USD"] as Currency[]).map((c) => (
-          <button
+          <Option
             key={c}
-            type="button"
-            className={cell(draftCur === c)}
+            on={draftCur === c}
+            layoutId="prefs-cur"
             onClick={() => setDraftCur(c)}
           >
             {SYMBOLS[c]} {c}
-          </button>
+          </Option>
         ))}
       </div>
 
-      <button
-        type="button"
+      <Cta
         onClick={() => onSave(draftLang, draftCur)}
-        className="w-full bg-ink p-4 font-mono text-xs uppercase tracking-[0.14em] text-bg transition-colors hover:bg-[#2e2a20]"
+        variant="primary"
+        className="w-full p-4 font-mono text-xs uppercase tracking-[0.14em]"
       >
         {t("prefs.save")}
-      </button>
+      </Cta>
     </motion.div>
   );
 }
