@@ -31,7 +31,7 @@ export default function FullscreenNav() {
       {navOpen && (
         <motion.div
           data-lenis-prevent
-          className="fixed inset-0 z-[150] flex flex-col overflow-y-auto bg-bg antialiased [backface-visibility:hidden]"
+          className="fixed inset-x-0 top-0 z-[150] flex h-dvh flex-col overflow-y-auto bg-bg antialiased [backface-visibility:hidden]"
           initial={{ y: "-101%" }}
           animate={{ y: 0 }}
           exit={{ y: "-101%" }}
@@ -60,49 +60,46 @@ export default function FullscreenNav() {
             SVITŁO
           </span>
 
-          <div className="flex min-h-full flex-col">
-            <nav className="flex flex-1 flex-col items-center justify-center gap-[clamp(10px,1.4vw,20px)] px-[clamp(20px,5vw,56px)] py-[clamp(96px,14vh,160px)]">
-              {LINKS.map((l, i) => {
-                const current = pathname === l.href;
-                return (
-                  <motion.div
-                    key={l.href}
-                    initial={reduce ? false : { opacity: 0, y: 18 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      duration: 0.5,
-                      delay: 0.18 + i * 0.07,
-                      ease: [0.76, 0, 0.24, 1],
-                    }}
+          <nav className="flex flex-1 shrink-0 flex-col items-center justify-center gap-[clamp(10px,1.4vw,20px)] px-[clamp(20px,5vw,56px)] pb-[clamp(24px,4vh,120px)] pt-[clamp(84px,11vh,160px)]">
+            {LINKS.map((l, i) => {
+              const current = pathname === l.href;
+              return (
+                <motion.div
+                  key={l.href}
+                  initial={reduce ? false : { opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.5,
+                    delay: 0.18 + i * 0.07,
+                    ease: [0.76, 0, 0.24, 1],
+                  }}
+                >
+                  <Link
+                    href={l.href}
+                    onClick={navigate}
+                    aria-current={current ? "page" : undefined}
+                    className="group relative block text-center text-[clamp(30px,8vw,132px)] font-light uppercase leading-[1.0] tracking-[0.035em] text-ink"
                   >
-                    <Link
-                      href={l.href}
-                      onClick={navigate}
-                      aria-current={current ? "page" : undefined}
-                      className="group relative block text-center text-[clamp(30px,8vw,132px)] font-light uppercase leading-[1.0] tracking-[0.035em] text-ink"
-                    >
-                      {t(l.key)}
-                      <span
-                        aria-hidden
-                        className={`absolute inset-x-0 -bottom-1 h-px origin-left bg-ink transition-transform duration-500 ease-out motion-reduce:transition-none ${
-                          current
-                            ? "scale-x-100"
-                            : "scale-x-0 group-hover:scale-x-100 group-focus-visible:scale-x-100"
-                        }`}
-                      />
-                    </Link>
-                  </motion.div>
-                );
-              })}
-            </nav>
-
-          </div>
+                    {t(l.key)}
+                    <span
+                      aria-hidden
+                      className={`absolute inset-x-0 -bottom-1 h-px origin-left bg-ink transition-transform duration-500 ease-out motion-reduce:transition-none ${
+                        current
+                          ? "scale-x-100"
+                          : "scale-x-0 group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                      }`}
+                    />
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </nav>
 
           <motion.div
             initial={reduce ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.18 + LINKS.length * 0.07 }}
-            className="flex flex-col items-center gap-5 px-[clamp(20px,5vw,56px)] pb-[clamp(20px,3vw,32px)] md:absolute md:inset-x-0 md:bottom-0"
+            className="flex shrink-0 flex-col items-center gap-4 px-[clamp(20px,5vw,56px)] pb-[calc(env(safe-area-inset-bottom,0px)+clamp(28px,5vh,44px))] md:absolute md:inset-x-0 md:bottom-0 md:gap-5 md:pb-[clamp(20px,3vw,32px)]"
           >
             <div className="flex flex-wrap justify-center gap-8 md:hidden">
               <PrefGroup
