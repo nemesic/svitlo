@@ -200,7 +200,7 @@ function DesktopGallery({ images, alt }: { images: string[]; alt: string }) {
   }, [idx]);
 
   return (
-    <div className="hidden md:flex md:flex-row md:gap-3.5">
+    <div className="hidden md:sticky md:top-[90px] md:flex md:flex-row md:gap-3.5 md:self-start">
       <div className="relative flex flex-col gap-2.5">
         <motion.span
           aria-hidden

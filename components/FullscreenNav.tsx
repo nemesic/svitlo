@@ -1,25 +1,25 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useStore } from "@/app/store-provider";
+import { CHANNELS, PROFILE_URL } from "@/lib/contact";
 import { type Currency, SYMBOLS } from "@/lib/currency";
 import type { Lang, MessageKey } from "@/lib/i18n";
 import { scrollToTop } from "@/lib/scroll";
 
-const LINKS: { n: string; href: string; key: MessageKey; prev: string }[] = [
-  { n: "01", href: "/", key: "nav.home", prev: "/images/editorial/home.mp4" },
-  { n: "02", href: "/shop", key: "nav.shop", prev: "/images/editorial/shop.jpg" },
-  { n: "03", href: "/lookbook", key: "nav.lookbook", prev: "/images/editorial/lookbyk.jpg" },
-  { n: "04", href: "/account", key: "nav.account", prev: "/images/editorial/acc.jpg" },
+const LINKS: { href: string; key: MessageKey }[] = [
+  { href: "/", key: "nav.home" },
+  { href: "/contact", key: "nav.contact" },
+  { href: "/account", key: "nav.account" },
 ];
 
 export default function FullscreenNav() {
   const { navOpen, closeNav, lang, currency, setLang, setCurrency, t } =
     useStore();
-  const [preview, setPreview] = useState(LINKS[0].prev);
+  const pathname = usePathname();
+  const reduce = useReducedMotion();
 
   const navigate = () => {
     closeNav();
@@ -37,94 +37,105 @@ export default function FullscreenNav() {
           exit={{ y: "-101%" }}
           transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
         >
-          <div className="flex items-center justify-between border-b border-line px-[clamp(20px,5vw,40px)] py-[18px]">
-            <Link
-              href="/"
-              onClick={navigate}
-              aria-label={t("nav.home")}
-              className="text-[clamp(16px,3vw,20px)] font-semibold uppercase tracking-[0.24em] transition-opacity hover:opacity-60"
-            >
-              SVITŁO
-            </Link>
+          <div className="absolute left-[clamp(20px,5vw,40px)] top-[clamp(20px,4vw,32px)] z-10">
             <button
               type="button"
               onClick={closeNav}
-              className="flex items-center gap-2.5 hover:opacity-50"
+              aria-label={t("nav.close")}
+              className="-m-3 block p-3 transition-opacity hover:opacity-50"
             >
-              <span className="font-mono text-xs uppercase leading-none tracking-[0.16em]">
-                {t("nav.close")}
-              </span>
               <svg
                 aria-hidden
-                viewBox="0 0 12 12"
-                className="h-[11px] w-[11px]"
+                viewBox="0 0 24 24"
+                className="h-[26px] w-[26px]"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="1.4"
+                strokeWidth="1.5"
               >
-                <path d="M1.5 1.5 10.5 10.5 M10.5 1.5 1.5 10.5" />
+                <path d="M4 4 20 20 M20 4 4 20" />
               </svg>
             </button>
           </div>
+          <span className="absolute right-[clamp(20px,5vw,40px)] top-[clamp(20px,4vw,32px)] z-10 text-[13px] font-semibold uppercase leading-none tracking-[0.24em] text-ink">
+            SVITŁO
+          </span>
 
-          <div className="grid flex-1 grid-cols-1 md:grid-cols-[1.3fr_1fr]">
-            <div className="flex flex-col justify-center px-[clamp(20px,5vw,56px)] py-[clamp(40px,7vw,80px)]">
-              {LINKS.map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  onClick={navigate}
-                  onMouseEnter={() => setPreview(l.prev)}
-                  className="flex items-baseline gap-5 py-[clamp(7px,1.2vw,12px)] text-[clamp(40px,7vw,88px)] font-light leading-[1.04] tracking-[-0.03em] text-[#111] transition-[padding,opacity] hover:pl-[18px] hover:opacity-50"
-                >
-                  <span className="font-mono text-xs font-normal tracking-[0.1em] opacity-50">
-                    {l.n}
-                  </span>
-                  {t(l.key)}
-                </Link>
-              ))}
+          <div className="flex min-h-full flex-col">
+            <nav className="flex flex-1 flex-col items-center justify-center gap-[clamp(10px,1.4vw,20px)] px-[clamp(20px,5vw,56px)] py-[clamp(96px,14vh,160px)]">
+              {LINKS.map((l, i) => {
+                const current = pathname === l.href;
+                return (
+                  <motion.div
+                    key={l.href}
+                    initial={reduce ? false : { opacity: 0, y: 18 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.5,
+                      delay: 0.18 + i * 0.07,
+                      ease: [0.76, 0, 0.24, 1],
+                    }}
+                  >
+                    <Link
+                      href={l.href}
+                      onClick={navigate}
+                      aria-current={current ? "page" : undefined}
+                      className="group relative block text-center text-[clamp(30px,8vw,132px)] font-light uppercase leading-[1.0] tracking-[0.035em] text-ink"
+                    >
+                      {t(l.key)}
+                      <span
+                        aria-hidden
+                        className={`absolute inset-x-0 -bottom-1 h-px origin-left bg-ink transition-transform duration-500 ease-out motion-reduce:transition-none ${
+                          current
+                            ? "scale-x-100"
+                            : "scale-x-0 group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                        }`}
+                      />
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </nav>
 
-              <div className="mt-[clamp(28px,4vw,48px)] flex flex-wrap gap-7 border-t border-line pt-7">
-                <PrefGroup
-                  label={t("prefs.language")}
-                  layoutId="nav-lang"
-                  options={["UA", "EN"] as Lang[]}
-                  active={lang}
-                  onPick={(v) => setLang(v as Lang)}
-                />
-                <PrefGroup
-                  label={t("prefs.currency")}
-                  layoutId="nav-cur"
-                  options={["UAH", "EUR", "USD"] as Currency[]}
-                  active={currency}
-                  onPick={(v) => setCurrency(v as Currency)}
-                  render={(v) => `${SYMBOLS[v as Currency]} ${v}`}
-                />
-              </div>
-            </div>
-
-            <div className="relative hidden overflow-hidden bg-placeholder md:block">
-              {preview.endsWith(".mp4") ? (
-                <video
-                  key={preview}
-                  src={preview}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[400ms]"
-                />
-              ) : (
-                <Image
-                  src={preview}
-                  alt="preview"
-                  fill
-                  sizes="40vw"
-                  className="object-cover transition-opacity duration-[400ms]"
-                />
-              )}
-            </div>
           </div>
+
+          <motion.div
+            initial={reduce ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.18 + LINKS.length * 0.07 }}
+            className="flex flex-col items-center gap-5 px-[clamp(20px,5vw,56px)] pb-[clamp(20px,3vw,32px)] md:absolute md:inset-x-0 md:bottom-0"
+          >
+            <div className="flex flex-wrap justify-center gap-8 md:hidden">
+              <PrefGroup
+                label={t("prefs.language")}
+                layoutId="nav-lang"
+                options={["UA", "EN"] as Lang[]}
+                active={lang}
+                onPick={(v) => setLang(v as Lang)}
+              />
+              <PrefGroup
+                label={t("prefs.currency")}
+                layoutId="nav-cur"
+                options={["UAH", "EUR", "USD"] as Currency[]}
+                active={currency}
+                onPick={(v) => setCurrency(v as Currency)}
+                render={(v) => `${SYMBOLS[v as Currency]} ${v}`}
+              />
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
+              {CHANNELS.map((c) => (
+                <a
+                  key={c.label}
+                  href={PROFILE_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-2 transition-colors hover:text-ink"
+                >
+                  {c.label}
+                </a>
+              ))}
+            </div>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>

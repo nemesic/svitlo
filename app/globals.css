@@ -16,14 +16,19 @@
 
 * {
   box-sizing: border-box;
-  scrollbar-width: none; 
-  -ms-overflow-style: none;
 }
 
-*::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  display: none;
+/* Запасное значение до того, как ChromeHeight измерит настоящее.
+   Нужно только для первой отрисовки и для SSR. */
+:root {
+  --chrome-h: 105px;
+}
+
+/* Скроллбар виден: читателю нужно понимать длину страницы.
+   Стилизован под палитру, а не скрыт. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-muted) transparent;
 }
 
 html,
@@ -77,41 +82,28 @@ select:focus {
   }
 }
 
+/* Сдвиг ровно на одну копию из четырёх.
+   Было -50% при двух копиях: смещение равнялось ширине одной копии, но
+   позади оставалась только одна — на широком экране лента к концу цикла
+   не доставала до правого края, там появлялась пустота и рывок. Четыре
+   копии и -25% дают тот же шаг, но с тройным запасом позади, поэтому
+   полотно закрыто на любой ширине вплоть до ультравайда. */
 @keyframes svMarquee {
   from {
     transform: translateX(0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translateX(-25%);
   }
 }
 
-@keyframes svShine {
-  from {
-    background-position: 200% center;
-  }
-  to {
-    background-position: -200% center;
-  }
-}
-.sv-shine {
-  background-image: linear-gradient(
-    100deg,
-    var(--color-muted) 35%,
-    var(--color-ink) 50%,
-    var(--color-muted) 65%
-  );
-  background-size: 200% auto;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  animation: svShine 6s linear infinite;
-}
+/* Бесконечное движение мешает части читателей — от трудностей с чтением
+   до укачивания. Строка при этом остаётся на месте и полностью читаема. */
 @media (prefers-reduced-motion: reduce) {
-  .sv-shine {
+  .sv-marquee {
     animation: none;
-    background: none;
-    color: var(--color-muted);
-    -webkit-text-fill-color: var(--color-muted);
   }
 }
+
+/* @keyframes svShine и .sv-shine удалены вместе с CreditBar — больше
+   ничто в проекте их не использовало. */

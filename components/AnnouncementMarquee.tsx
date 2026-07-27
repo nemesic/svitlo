@@ -20,9 +20,14 @@ export default function AnnouncementMarquee() {
 
   return (
     <div className="overflow-hidden whitespace-nowrap border-b border-line bg-bg">
-      <div className="inline-flex animate-[svMarquee_42s_linear_infinite] will-change-transform hover:[animation-play-state:paused]">
-        {track}
-        <span aria-hidden="true">{track}</span>
+      <div className="sv-marquee inline-flex animate-[svMarquee_30s_linear_infinite] will-change-transform hover:[animation-play-state:paused]">
+        {[0, 1, 2, 3].map((copy) => (
+          // Читает строку только первая копия, остальные — визуальный
+          // повтор, иначе скринридер зачитает объявления четыре раза.
+          <span key={copy} aria-hidden={copy > 0 || undefined}>
+            {track}
+          </span>
+        ))}
       </div>
     </div>
   );

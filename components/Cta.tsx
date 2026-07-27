@@ -28,7 +28,6 @@ type CtaProps = {
   onClick?: () => void;
   className?: string;
   variant?: Variant;
-  arrow?: boolean;
   shine?: boolean;
   children: ReactNode;
   "aria-label"?: string;
@@ -40,25 +39,11 @@ export default function Cta({
   onClick,
   className,
   variant = "bare",
-  arrow = false,
   shine = true,
   children,
   ...rest
 }: CtaProps) {
   const cls = [BASE[variant], className].filter(Boolean).join(" ");
-
-  const arrowEl = arrow ? (
-    <span
-      aria-hidden
-      className={
-        variant === "ghost"
-          ? "text-muted transition-all duration-300 ease-out group-hover:translate-x-1 group-hover:text-ink motion-reduce:transition-none"
-          : "transition-transform duration-300 ease-out group-hover:translate-x-1 motion-reduce:transition-none"
-      }
-    >
-      →
-    </span>
-  ) : null;
 
   const body =
     variant === "primary" ? (
@@ -69,16 +54,8 @@ export default function Cta({
             className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/35 to-transparent transition-[left] duration-700 ease-out group-hover:left-[120%] motion-reduce:hidden"
           />
         )}
-        <span className="relative inline-flex items-center gap-2.5">
-          {children}
-          {arrowEl}
-        </span>
+        <span className="relative inline-flex items-center">{children}</span>
       </>
-    ) : arrow ? (
-      <span className="inline-flex items-center gap-2.5">
-        {children}
-        {arrowEl}
-      </span>
     ) : (
       children
     );

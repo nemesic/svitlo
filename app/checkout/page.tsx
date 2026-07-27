@@ -39,7 +39,6 @@ export default function CheckoutPage() {
         <Cta
           href="/"
           variant="primary"
-          arrow
           className="px-[34px] py-[17px] font-mono text-xs uppercase tracking-[0.14em]"
         >
           {t("checkout.continue")}

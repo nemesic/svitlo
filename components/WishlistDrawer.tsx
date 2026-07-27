@@ -58,7 +58,6 @@ export default function WishlistDrawer() {
                   <Cta
                     onClick={closeWish}
                     variant="primary"
-                    arrow
                     className="px-6 py-3.5 font-mono text-[11px] uppercase tracking-[0.14em]"
                   >
                     {t("wish.continue")}

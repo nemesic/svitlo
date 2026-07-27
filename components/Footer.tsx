@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useStore } from "@/app/store-provider";
 import Cta from "@/components/Cta";
+import { PROFILE_URL } from "@/lib/contact";
 
 export default function Footer() {
   const { t } = useStore();
@@ -60,8 +61,8 @@ export default function Footer() {
         <FooterCol
           title={t("footer.connect")}
           links={[
-            { label: "Instagram", href: "#" },
-            { label: "TikTok", href: "#" },
+            { label: "Instagram", href: PROFILE_URL },
+            { label: "TikTok", href: PROFILE_URL },
           ]}
         />
       </div>
@@ -89,11 +90,24 @@ function FooterCol({
         {title}
       </span>
       <div className="mt-[18px] flex flex-col gap-[11px] text-sm">
-        {links.map((l, i) => (
-          <Link key={`${l.label}-${i}`} href={l.href} className="text-ink hover:opacity-55">
-            {l.label}
-          </Link>
-        ))}
+        {links.map((l, i) => {
+          const cls = "text-ink hover:opacity-55";
+          return l.href.startsWith("http") ? (
+            <a
+              key={`${l.label}-${i}`}
+              href={l.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cls}
+            >
+              {l.label}
+            </a>
+          ) : (
+            <Link key={`${l.label}-${i}`} href={l.href} className={cls}>
+              {l.label}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

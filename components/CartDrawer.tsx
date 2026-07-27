@@ -62,7 +62,6 @@ export default function CartDrawer() {
                   <Cta
                     onClick={closeDrawer}
                     variant="primary"
-                    arrow
                     className="px-6 py-3.5 font-mono text-[11px] uppercase tracking-[0.14em]"
                   >
                     {t("cart.continue")}

@@ -3,12 +3,7 @@
 import Cta from "@/components/Cta";
 import { useStore } from "@/app/store-provider";
 import type { MessageKey } from "@/lib/i18n";
-
-const CHANNELS: { label: string; value: string; href: string }[] = [
-  { label: "Email", value: "hello@svitlo.store", href: "mailto:hello@svitlo.store" },
-  { label: "Instagram", value: "@svitlo", href: "https://instagram.com/svitlo" },
-  { label: "TikTok", value: "@svitlo", href: "https://tiktok.com/@svitlo" },
-];
+import { CHANNELS, PROFILE_URL } from "@/lib/contact";
 
 const INFO: { label: MessageKey; value: MessageKey }[] = [
   { label: "contact.locationLabel", value: "contact.location" },
@@ -36,9 +31,9 @@ export default function ContactPage() {
         {CHANNELS.map((c) => (
           <a
             key={c.label}
-            href={c.href}
-            target={c.href.startsWith("http") ? "_blank" : undefined}
-            rel={c.href.startsWith("http") ? "noopener noreferrer" : undefined}
+            href={PROFILE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="group flex items-baseline justify-between gap-6 border-t border-line py-5 hover:opacity-60"
           >
             <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
@@ -75,7 +70,6 @@ export default function ContactPage() {
             <Cta
               href="mailto:hello@svitlo.store"
               variant="primary"
-              arrow
               className="px-[34px] py-[18px] font-mono text-xs uppercase tracking-[0.16em]"
             >
               {t("contact.emailCta")}

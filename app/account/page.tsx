@@ -96,94 +96,117 @@ export default function AccountPage() {
     );
   }
 
+  const submitLabel =
+    mode === "login" ? t("account.signin") : t("account.register");
   return (
-    <section className="grid min-h-[78vh] grid-cols-1 md:grid-cols-2">
-      <div className="flex flex-col justify-center px-[clamp(18px,5vw,72px)] py-[clamp(48px,8vw,90px)]">
-        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+    <section className="flex min-h-[calc(100dvh-var(--chrome-h))] items-start justify-center px-[clamp(18px,5vw,40px)] pb-[clamp(48px,8vw,96px)] pt-[clamp(36px,9vh,104px)]">
+      {/* Одна центрированная колонка. Ширина 400px — форма из трёх полей не
+          должна растягиваться на пол-экрана: длинная строка ввода читается
+          как «здесь много текста», а тут нужно 30 символов. */}
+      <div className="w-full max-w-[400px]">
+        <span className="block text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
           SVITŁO — {t("nav.account")}
         </span>
-        <div className="my-[28px] flex max-w-[380px] border-b border-line">
-          {(["login", "register"] as const).map((m) => (
-            <button
-              key={m}
-              type="button"
-              onClick={() => setMode(m)}
-              className={`-mb-px flex-1 border-b py-3.5 text-sm font-semibold uppercase tracking-[0.03em] ${
-                mode === m
-                  ? "border-ink text-ink"
-                  : "border-transparent text-[#a8a39a]"
-              }`}
-            >
-              {m === "login" ? t("account.signin") : t("account.register")}
-            </button>
-          ))}
-        </div>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            setLoggedIn(true);
-          }}
-          className="max-w-[380px]"
-        >
-          {mode === "register" && (
+
+        <div className="mt-[clamp(22px,3vw,30px)] border border-line">
+          <div className="flex border-b border-line">
+            {(["login", "register"] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                onClick={() => setMode(m)}
+                aria-pressed={mode === m}
+                className={`relative flex-1 py-4 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors ${
+                  mode === m ? "text-ink" : "text-muted hover:text-ink"
+                }`}
+              >
+                {m === "login" ? t("account.signin") : t("account.register")}
+
+                {mode === m && (
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 -bottom-px h-0.5 bg-ink"
+                  />
+                )}
+              </button>
+            ))}
+          </div>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setLoggedIn(true);
+            }}
+            className="p-[clamp(20px,3.5vw,30px)]"
+          >
+            {mode === "register" && (
+              <div className="mb-[22px]">
+                <label
+                  htmlFor="acc-name"
+                  className="mb-2 block font-mono text-[11px] uppercase tracking-[0.12em] text-muted"
+                >
+                  {t("account.fullName")}
+                </label>
+                <input
+                  id="acc-name"
+                  name="name"
+                  type="text"
+                  autoComplete="name"
+                  placeholder="Taras Svitlo"
+                  className={inputCls}
+                />
+              </div>
+            )}
             <div className="mb-[22px]">
-              <label className="mb-2 block font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-                {t("account.fullName")}
+              <label
+                htmlFor="acc-email"
+                className="mb-2 block font-mono text-[11px] uppercase tracking-[0.12em] text-muted"
+              >
+                {t("account.emailLabel")}
               </label>
-              <input type="text" placeholder="Taras Svitlo" className={inputCls} />
+              <input
+                id="acc-email"
+                name="email"
+                type="email"
+                required
+                autoComplete="email"
+                placeholder="you@email.com"
+                className={inputCls}
+              />
             </div>
-          )}
-          <div className="mb-[22px]">
-            <label className="mb-2 block font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-              {t("account.emailLabel")}
-            </label>
-            <input
-              type="email"
-              required
-              placeholder="you@email.com"
-              className={inputCls}
-            />
-          </div>
-          <div className="mb-[30px]">
-            <label className="mb-2 block font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-              {t("account.password")}
-            </label>
-            <input
-              type="password"
-              required
-              placeholder="••••••••"
-              className={inputCls}
-            />
-          </div>
-          <Cta
-            type="submit"
-            variant="primary"
-            className="w-full p-[17px] font-mono text-xs uppercase tracking-[0.14em]"
-          >
-            {mode === "login" ? t("account.signin") : t("account.register")}
-          </Cta>
-          <p className="mt-4 font-mono text-[9px] italic tracking-[0.04em] text-[#999]">
-            {t("account.demo")}
-          </p>
-        </form>
-      </div>
-      <div className="relative min-h-[340px] overflow-hidden bg-placeholder">
-        <video
-          src="/images/editorial/account.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute bottom-0 left-0 p-5">
-          <p
-            spellCheck={false}
-            className="border-0 text-sm leading-[1.4] tracking-[0.05em] text-white no-underline [text-decoration:none]"
-          >
-            {t("account.members")}
-          </p>
+            <div className="mb-[28px]">
+              <label
+                htmlFor="acc-password"
+                className="mb-2 block font-mono text-[11px] uppercase tracking-[0.12em] text-muted"
+              >
+                {t("account.password")}
+              </label>
+              <input
+                id="acc-password"
+                name="password"
+                type="password"
+                required
+                autoComplete={
+                  mode === "login" ? "current-password" : "new-password"
+                }
+                placeholder="••••••••"
+                className={inputCls}
+              />
+            </div>
+            <Cta
+              type="submit"
+              variant="primary"
+              className="w-full p-[17px] font-mono text-xs uppercase tracking-[0.14em]"
+            >
+              {submitLabel}
+            </Cta>
+          </form>
         </div>
+
+
+        <p className="mt-[18px] text-center font-mono text-[12px] leading-[1.6] tracking-[0.03em] text-muted-2">
+          {t("account.demo")}
+        </p>
       </div>
     </section>
   );

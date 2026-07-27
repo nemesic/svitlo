@@ -4,6 +4,7 @@ export const MESSAGES = {
   "nav.home": { EN: "Home", UA: "Головна" },
   "nav.shop": { EN: "Shop", UA: "Магазин" },
   "nav.lookbook": { EN: "Lookbook", UA: "Лукбук" },
+  "nav.contact": { EN: "Contact", UA: "Контакти" },
   "nav.account": { EN: "Account", UA: "Акаунт" },
   "nav.menu": { EN: "Menu", UA: "Меню" },
   "nav.close": { EN: "Close", UA: "Закрити" },
@@ -164,6 +165,9 @@ export const MESSAGES = {
   },
   "lookbook.looks": { EN: "The looks", UA: "Образи" },
   "lookbook.shopLook": { EN: "Shop the look", UA: "Купити образ" },
+  "look.01": { EN: "Denim, worn loose.", UA: "Денім, вільно." },
+  "look.02": { EN: "The weekend uniform.", UA: "Уніформа вихідного." },
+  "look.03": { EN: "Layered for the cold snap.", UA: "Шари на похолодання." },
   "lookbook.outro": {
     EN: "Every piece above is in stock and ready to ship from Kyiv.",
     UA: "Кожна річ вище є в наявності та готова до відправлення з Києва.",
@@ -231,14 +235,19 @@ export const MESSAGES = {
     EN: "SVITŁO is a Kyiv storefront for considered streetwear — we select the season's best pieces from labels we trust and ship them worldwide.",
     UA: "SVITŁO — київський магазин продуманого streetwear: ми відбираємо найкращі речі сезону від брендів, яким довіряємо, і доставляємо по всьому світу.",
   },
+
+  "about.stance": {
+    EN: "No own-label. No copies.",
+    UA: "Без власної марки. Без копій.",
+  },
   "about.body": {
-    EN: "No own-label, no copies — just a tight edit of Zara, Bershka and Pull&Bear pieces, styled and shot in Kyiv. Honest photography, prices in your currency, and free shipping over €200.",
-    UA: "Без власної марки й копій — лише щільна добірка речей Zara, Bershka та Pull&Bear, стилізованих і відзнятих у Києві. Чесні фото, ціни у вашій валюті та безкоштовна доставка від €200.",
+    EN: "A tight edit of Zara, Bershka and Pull&Bear pieces, styled and shot in Kyiv. Honest photography, prices in your currency, and free shipping over €200.",
+    UA: "Щільна добірка речей Zara, Bershka та Pull&Bear, стилізованих і відзнятих у Києві. Чесні фото, ціни у вашій валюті та безкоштовна доставка від €200.",
   },
   "about.fact1": { EN: "Based in Kyiv", UA: "База — Київ" },
   "about.fact2": { EN: "Worldwide shipping", UA: "Доставка по світу" },
   "about.fact3": { EN: "Curated, not made", UA: "Відбираємо, не шиємо" },
-  "about.cta": { EN: "Shop the collection", UA: "До колекції" },
+  "about.cta": { EN: "See what we picked", UA: "Подивитись добірку" },
 
   "contact.eyebrow": { EN: "Contact", UA: "Контакти" },
   "contact.title": { EN: "Say hello.", UA: "Напишіть нам." },

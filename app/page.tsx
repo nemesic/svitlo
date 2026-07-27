@@ -43,8 +43,13 @@ export default function Home() {
 
   return (
     <div>
+      {/* Hero занимает ровно остаток первого экрана.
+          --chrome-h меряет ChromeHeight (маркиза + шапка) — на телефоне и на
+          десктопе она разной высоты, поэтому число нельзя зашивать в код.
+          dvh, а не svh: на мобильных при скрытии адресной строки svh меньше
+          реально видимой области, и внизу оставалась белая полоса. */}
       <section className="relative grid grid-cols-1 items-stretch overflow-hidden border-b border-line md:overflow-visible md:grid-cols-2">
-        <div className="relative z-10 flex min-h-[calc(100svh-99px)] flex-col justify-end gap-7 px-[clamp(20px,5vw,56px)] pb-[clamp(36px,6vw,72px)] pt-[clamp(72px,8vw,88px)] text-white md:min-h-[64vh] md:justify-center md:text-ink">
+        <div className="relative z-10 flex min-h-[calc(100dvh-var(--chrome-h))] flex-col justify-end gap-7 px-[clamp(20px,5vw,56px)] pb-[clamp(36px,6vw,72px)] pt-[clamp(72px,8vw,88px)] text-white md:justify-center md:text-ink">
           <div>
             <h1 className="m-0 text-[clamp(46px,7.5vw,116px)] font-light leading-[0.94] tracking-[-0.035em]">
               {t("hero.title")}
@@ -56,7 +61,6 @@ export default function Home() {
               <Cta
                 href="/shop"
                 variant="primary"
-                arrow
                 className="px-[30px] py-4 font-mono text-xs uppercase tracking-[0.16em]"
               >
                 {t("hero.shop")}
@@ -64,23 +68,17 @@ export default function Home() {
               <Cta
                 href="/lookbook"
                 variant="bare"
-                className="group inline-flex items-center justify-center gap-2.5 border border-ink bg-white px-[30px] py-4 font-mono text-xs uppercase tracking-[0.16em] text-ink transition-colors hover:bg-ink hover:text-bg"
+                className="inline-flex items-center justify-center border border-ink bg-white px-[30px] py-4 font-mono text-xs uppercase tracking-[0.16em] text-ink transition-colors hover:bg-ink hover:text-bg"
               >
                 {t("hero.lookbook")}
-                <span
-                  aria-hidden
-                  className="transition-transform duration-300 ease-out group-hover:translate-x-1 motion-reduce:transition-none"
-                >
-                  →
-                </span>
               </Cta>
             </div>
           </div>
         </div>
-        <div className="group absolute inset-0 z-0 overflow-hidden bg-placeholder md:relative md:min-h-[64vh]">
+        <div className="group absolute inset-0 z-0 overflow-hidden bg-placeholder md:relative md:min-h-[calc(100dvh-var(--chrome-h))]">
           <video
             className="absolute inset-0 h-full w-full object-cover object-[center_30%]"
-            src="/images/editorial/hero.mp4"
+            src="/images/editorial/hero.mp4?v=2"
             autoPlay
             muted
             loop
@@ -112,10 +110,14 @@ export default function Home() {
       </section>
 
       <section className="mt-6 grid grid-cols-1 border-y border-line md:grid-cols-2">
-        <div className="group relative min-h-[560px] overflow-hidden bg-placeholder md:min-h-[660px]">
+        {/* Пропорция вместо фиксированной высоты: min-h-[560px] на телефоне
+            съедало две трети экрана независимо от того, какой это телефон.
+            aspect-[4/5] масштабируется вместе с шириной. */}
+        <div className="relative aspect-4/5 overflow-hidden bg-placeholder md:aspect-auto md:min-h-[660px]">
           <video
             className="absolute inset-0 h-full w-full object-cover object-center"
             src="/images/editorial/making.mp4"
+            poster="/images/editorial/making-poster.webp"
             autoPlay
             muted
             loop
@@ -124,17 +126,30 @@ export default function Home() {
             aria-hidden
           />
         </div>
-        <div className="flex flex-col justify-center border-l border-line px-[clamp(22px,5vw,64px)] py-[clamp(44px,8vw,80px)]">
-          <Eyebrow>02 — {t("home.story")}</Eyebrow>
-          <h2 className="mt-5 text-[clamp(28px,3.6vw,52px)] font-light leading-[1.06] tracking-[-0.025em]">
-            {t("story.title")}
-          </h2>
-          <p className="mt-6 max-w-[440px] text-base leading-[1.65] text-ink-soft">
-            {t("story.body")}
-          </p>
-          <ArrowLink href="/shop" className="mt-[34px]">
-            {t("story.link")}
-          </ArrowLink>
+        {/* border-l разделяет две колонки. На телефоне колонка одна, и эта
+            же линия рисовалась вертикально слева от текста — сверху нужна
+            горизонтальная. */}
+        <div className="flex flex-col justify-center border-t border-line px-[clamp(18px,5vw,64px)] py-[clamp(44px,8vw,80px)] md:border-l md:border-t-0">
+          {/* На десктопе колонка ~960px, а строка текста — 46ch (~480px).
+              Пока блок был прижат к разделительной линии, справа оставалось
+              больше 400px пустоты, и половина выглядела незаполненной.
+              Обёртка центрирует блок внутри своей половины: пустое место
+              делится поровну и читается как поле, а не как обрыв.
+              На телефоне блок остаётся прижат к левому полю страницы. */}
+          <div className="md:mx-auto md:w-full md:max-w-[460px]">
+            <Eyebrow>02 — {t("home.story")}</Eyebrow>
+            {/* text-balance — заголовок в две-три строки иначе оставляет
+                одно слово на последней. */}
+            <h2 className="mt-5 max-w-[16ch] text-balance text-[clamp(28px,3.6vw,52px)] font-light leading-[1.06] tracking-[-0.025em]">
+              {t("story.title")}
+            </h2>
+            <p className="mt-6 max-w-[46ch] text-base leading-[1.65] text-ink-soft">
+              {t("story.body")}
+            </p>
+            <ArrowLink href="/shop" className="mt-[34px]">
+              {t("story.link")}
+            </ArrowLink>
+          </div>
         </div>
       </section>
 

@@ -12,17 +12,29 @@ import CartDrawer from "@/components/CartDrawer";
 import WishlistDrawer from "@/components/WishlistDrawer";
 import PreferencesModal from "@/components/PreferencesModal";
 import SmoothScroll from "@/components/SmoothScroll";
-import ScrollProgress from "@/components/ScrollProgress";
-import CreditBar from "@/components/CreditBar";
+import ChromeHeight from "@/components/ChromeHeight";
 
+/* Подмножества: latin одного мало.
+   cyrillic  — без него ВЕСЬ украинский текст сайта уходил в системный
+               шрифт: диапазон latin это U+0000-00FF, кириллицы там нет.
+               Отсюда и ощущение «дефолтный sans без характера» — в UA
+               режиме Geist просто не применялся.
+   latin-ext — диапазон U+20AD-20C0, в нём знак гривны ₴ (U+20B4).
+               Без него ₴ подхватывался системным шрифтом, вплоть до
+               цветного эмодзи-начертания. € (U+20AC) и $ (U+0024)
+               в latin есть, они рендерились правильно всегда.
+
+   Списки заданы литералами: next/font читает аргументы статически на
+   этапе сборки, вынесенная в константу и раскрытая спредом переменная
+   ломает сборку. */
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext", "cyrillic"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext", "cyrillic"],
 });
 
 export const metadata: Metadata = {
@@ -44,7 +56,7 @@ export default function RootLayout({
       <body>
         <StoreProvider>
           <SmoothScroll />
-          <ScrollProgress />
+          <ChromeHeight />
           <Preloader />
           <FullscreenNav />
           <AnnouncementMarquee />
@@ -52,7 +64,6 @@ export default function RootLayout({
           {children}
           <ServiceStrip />
           <Footer />
-          <CreditBar />
           <CartDrawer />
           <WishlistDrawer />
           <PreferencesModal />
